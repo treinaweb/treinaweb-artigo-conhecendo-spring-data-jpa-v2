@@ -1,7 +1,6 @@
 package br.com.treinaweb.twprojects.web.clients.controllers;
 
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import br.com.treinaweb.twprojects.core.exceptions.ClientNotFoundException;
 import br.com.treinaweb.twprojects.core.repositories.ClientRepository;
 import br.com.treinaweb.twprojects.web.clients.dtos.ClientForm;
 import br.com.treinaweb.twprojects.web.clients.mappers.ClientMapper;
@@ -53,7 +53,7 @@ public class ClientController {
     public ModelAndView edit(@PathVariable Long id) {
         var clientForm = clientRepository.findById(id)
             .map(clientMapper::toClientForm)
-            .orElseThrow(() -> new NoSuchElementException("Cliente não encontrado"));
+            .orElseThrow(ClientNotFoundException::new);
         var model = Map.of(
             "clientForm", clientForm,
             "pageTitle", "Edição de Cliente"
@@ -64,7 +64,7 @@ public class ClientController {
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable Long id, ClientForm clientForm) {
         if (!clientRepository.existsById(id)) {
-            throw new NoSuchElementException("Cliente não encontrado");
+            throw new ClientNotFoundException();
         }
         var client = clientMapper.toClient(clientForm);
         client.setId(id);
@@ -75,7 +75,7 @@ public class ClientController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         if (!clientRepository.existsById(id)) {
-            throw new NoSuchElementException("Cliente não encontrado");
+            throw new ClientNotFoundException();
         }
         clientRepository.deleteById(id);
         return "redirect:/clients";
