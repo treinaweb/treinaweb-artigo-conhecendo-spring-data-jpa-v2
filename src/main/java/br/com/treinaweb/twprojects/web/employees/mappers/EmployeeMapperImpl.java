@@ -3,6 +3,7 @@ package br.com.treinaweb.twprojects.web.employees.mappers;
 import org.springframework.stereotype.Component;
 
 import br.com.treinaweb.twprojects.core.models.Employee;
+import br.com.treinaweb.twprojects.core.utils.StringUtils;
 import br.com.treinaweb.twprojects.web.employees.dtos.EmployeeDetails;
 import br.com.treinaweb.twprojects.web.employees.dtos.EmployeeForm;
 import br.com.treinaweb.twprojects.web.employees.dtos.EmployeeListItem;
@@ -15,8 +16,8 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         return Employee.builder()
             .name(employeeForm.getName())
             .email(employeeForm.getEmail())
-            .phone(employeeForm.getPhone())
-            .cpf(employeeForm.getCpf())
+            .phone(StringUtils.cleanPhone(employeeForm.getPhone()))
+            .cpf(StringUtils.cleanCpf(employeeForm.getCpf()))
             .birthDate(employeeForm.getBirthDate())
             .hireDate(employeeForm.getHireDate())
             .resignationDate(employeeForm.getResignationDate())
@@ -28,8 +29,8 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         return EmployeeForm.builder()
             .name(employee.getName())
             .email(employee.getEmail())
-            .phone(employee.getPhone())
-            .cpf(employee.getCpf())
+            .phone(StringUtils.formatPhone(employee.getPhone()))
+            .cpf(StringUtils.formatCpf(employee.getCpf()))
             .birthDate(employee.getBirthDate())
             .hireDate(employee.getHireDate())
             .resignationDate(employee.getResignationDate())
@@ -42,7 +43,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             .id(employee.getId())
             .name(employee.getName())
             .email(employee.getEmail())
-            .phone(employee.getPhone())
+            .phone(StringUtils.formatPhone(employee.getPhone()))
             .build();
     }
 
@@ -51,8 +52,8 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         return EmployeeDetails.builder()
             .name(employee.getName())
             .email(employee.getEmail())
-            .phone(employee.getPhone())
-            .cpf(employee.getCpf())
+            .phone(StringUtils.formatPhone(employee.getPhone()))
+            .cpf(StringUtils.formatCpf(employee.getCpf()))
             .birthDate(employee.getBirthDate())
             .hireDate(employee.getHireDate())
             .resignationDate(employee.getResignationDate())
