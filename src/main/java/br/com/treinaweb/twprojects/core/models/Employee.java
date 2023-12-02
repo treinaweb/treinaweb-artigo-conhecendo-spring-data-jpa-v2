@@ -2,6 +2,7 @@ package br.com.treinaweb.twprojects.core.models;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,7 +53,7 @@ public class Employee {
     @Column(nullable = true)
     private LocalDate resignationDate;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
     
 }
