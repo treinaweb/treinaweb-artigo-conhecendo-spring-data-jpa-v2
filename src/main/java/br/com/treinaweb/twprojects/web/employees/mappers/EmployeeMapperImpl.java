@@ -7,9 +7,13 @@ import br.com.treinaweb.twprojects.core.utils.StringUtils;
 import br.com.treinaweb.twprojects.web.employees.dtos.EmployeeDetails;
 import br.com.treinaweb.twprojects.web.employees.dtos.EmployeeForm;
 import br.com.treinaweb.twprojects.web.employees.dtos.EmployeeListItem;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class EmployeeMapperImpl implements EmployeeMapper {
+
+    private final AddressMapper addressMapper;
 
     @Override
     public Employee toEmployee(EmployeeForm employeeForm) {
@@ -21,6 +25,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             .birthDate(employeeForm.getBirthDate())
             .hireDate(employeeForm.getHireDate())
             .resignationDate(employeeForm.getResignationDate())
+            .address(addressMapper.toAddress(employeeForm.getAddress()))
             .build();
     }
 
@@ -34,6 +39,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             .birthDate(employee.getBirthDate())
             .hireDate(employee.getHireDate())
             .resignationDate(employee.getResignationDate())
+            .address(addressMapper.toAddressForm(employee.getAddress()))
             .build();
     }
 
@@ -57,6 +63,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             .birthDate(employee.getBirthDate())
             .hireDate(employee.getHireDate())
             .resignationDate(employee.getResignationDate())
+            .address(addressMapper.formatAddress(employee.getAddress()))
             .build();
     }
     
