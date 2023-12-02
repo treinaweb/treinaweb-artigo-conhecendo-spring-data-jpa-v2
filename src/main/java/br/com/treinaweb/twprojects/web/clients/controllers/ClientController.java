@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.treinaweb.twprojects.core.repositories.ClientRepository;
 import br.com.treinaweb.twprojects.web.clients.dtos.ClientForm;
-import br.com.treinaweb.twprojects.web.clients.dtos.ClientListItem;
+import br.com.treinaweb.twprojects.web.clients.mappers.ClientMapper;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -20,13 +20,14 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/clients")
 public class ClientController {
 
+    private final ClientMapper clientMapper;
     private final ClientRepository clientRepository;
 
     @GetMapping
     public ModelAndView index() {
         var clients = clientRepository.findAll()
             .stream()
-            .map(ClientListItem::of)
+            .map(clientMapper::toClientListItem)
             .toList();
         var model = Map.of("clients", clients);
         return new ModelAndView("clients/index", model);
@@ -43,7 +44,7 @@ public class ClientController {
 
     @PostMapping("/create")
     public String create(ClientForm clientForm) {
-        var client = clientForm.toClient();
+        var client = clientMapper.toClient(clientForm);
         clientRepository.save(client);
         return "redirect:/clients";
     }
@@ -51,7 +52,7 @@ public class ClientController {
     @GetMapping("/edit/{id}")
     public ModelAndView edit(@PathVariable Long id) {
         var clientForm = clientRepository.findById(id)
-            .map(ClientForm::of)
+            .map(clientMapper::toClientForm)
             .orElseThrow(() -> new NoSuchElementException("Cliente não encontrado"));
         var model = Map.of(
             "clientForm", clientForm,
@@ -65,7 +66,7 @@ public class ClientController {
         if (!clientRepository.existsById(id)) {
             throw new NoSuchElementException("Cliente não encontrado");
         }
-        var client = clientForm.toClient();
+        var client = clientMapper.toClient(clientForm);
         client.setId(id);
         clientRepository.save(client);
         return "redirect:/clients";
