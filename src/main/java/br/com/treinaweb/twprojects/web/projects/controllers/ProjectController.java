@@ -2,6 +2,7 @@ package br.com.treinaweb.twprojects.web.projects.controllers;
 
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,6 +66,42 @@ public class ProjectController {
     public String create(ProjectForm projectForm) {
         var project = projectMapper.toProject(projectForm);
         projectRepository.save(project);
+        return "redirect:/projects";
+    }
+
+    @GetMapping("/edit/{id}")
+    public ModelAndView edit(@PathVariable Long id) {
+        var projectForm = projectRepository.findById(id)
+            .map(projectMapper::toProjectForm)
+            .orElseThrow(ProjectNotFoundException::new);
+        var clients = clientRepository.findAll();
+        var employees = employeeRepository.findAll();
+        
+        var model = Map.of(
+            "pageTitle", "Edição de Projeto",
+            "projectForm", projectForm,
+            "clients", clients,
+            "team", employees,
+            "managers", employees
+        );
+        return new ModelAndView("projects/form", model);
+    }
+
+    @PostMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, ProjectForm projectForm) {
+        var projectToUpdate = projectRepository.findById(id)
+            .orElseThrow(ProjectNotFoundException::new);
+        var projectData = projectMapper.toProject(projectForm);
+        BeanUtils.copyProperties(projectData, projectToUpdate, "id");
+        projectRepository.save(projectToUpdate);
+        return "redirect:/projects";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        var project = projectRepository.findById(id)
+            .orElseThrow(ProjectNotFoundException::new);
+        projectRepository.delete(project);
         return "redirect:/projects";
     }
     
