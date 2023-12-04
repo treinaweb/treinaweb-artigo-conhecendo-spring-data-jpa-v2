@@ -2,7 +2,9 @@ package br.com.treinaweb.twprojects.web.employees.mappers;
 
 import org.springframework.stereotype.Component;
 
+import br.com.treinaweb.twprojects.core.exceptions.PositionNotFoundException;
 import br.com.treinaweb.twprojects.core.models.Employee;
+import br.com.treinaweb.twprojects.core.repositories.PositionRepository;
 import br.com.treinaweb.twprojects.core.utils.StringUtils;
 import br.com.treinaweb.twprojects.web.employees.dtos.EmployeeDetails;
 import br.com.treinaweb.twprojects.web.employees.dtos.EmployeeForm;
@@ -14,9 +16,13 @@ import lombok.RequiredArgsConstructor;
 public class EmployeeMapperImpl implements EmployeeMapper {
 
     private final AddressMapper addressMapper;
+    private final PositionRepository positionRepository;
 
     @Override
     public Employee toEmployee(EmployeeForm employeeForm) {
+        var position = positionRepository.findById(employeeForm.getPositionId())
+            .orElseThrow(PositionNotFoundException::new);
+
         return Employee.builder()
             .name(employeeForm.getName())
             .email(employeeForm.getEmail())
@@ -26,6 +32,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             .hireDate(employeeForm.getHireDate())
             .resignationDate(employeeForm.getResignationDate())
             .address(addressMapper.toAddress(employeeForm.getAddress()))
+            .position(position)
             .build();
     }
 
@@ -40,6 +47,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             .hireDate(employee.getHireDate())
             .resignationDate(employee.getResignationDate())
             .address(addressMapper.toAddressForm(employee.getAddress()))
+            .positionId(employee.getPosition().getId())
             .build();
     }
 
@@ -50,6 +58,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             .name(employee.getName())
             .email(employee.getEmail())
             .phone(StringUtils.formatPhone(employee.getPhone()))
+            .position(employee.getPosition().getName())
             .build();
     }
 
@@ -64,6 +73,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             .hireDate(employee.getHireDate())
             .resignationDate(employee.getResignationDate())
             .address(addressMapper.formatAddress(employee.getAddress()))
+            .position(employee.getPosition().getName())
             .build();
     }
     

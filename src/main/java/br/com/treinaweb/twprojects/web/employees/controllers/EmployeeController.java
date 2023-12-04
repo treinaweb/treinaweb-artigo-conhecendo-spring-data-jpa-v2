@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.treinaweb.twprojects.core.exceptions.EmployeeNotFoundException;
 import br.com.treinaweb.twprojects.core.repositories.EmployeeRepository;
+import br.com.treinaweb.twprojects.core.repositories.PositionRepository;
 import br.com.treinaweb.twprojects.web.employees.dtos.EmployeeForm;
 import br.com.treinaweb.twprojects.web.employees.mappers.EmployeeMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class EmployeeController {
 
     private final EmployeeMapper employeeMapper;
     private final EmployeeRepository employeeRepository;
+    private final PositionRepository positionRepository;
 
     @GetMapping
     public ModelAndView index() {
@@ -45,9 +47,11 @@ public class EmployeeController {
 
     @GetMapping("/create")
     public ModelAndView create() {
+        var positions = positionRepository.findAll();
         var model = Map.of(
             "pageTitle", "Cadastro de Funcionário",
-            "employeeForm", new EmployeeForm()
+            "employeeForm", new EmployeeForm(),
+            "positions", positions
         );
         return new ModelAndView("employees/form", model);
     }
@@ -64,9 +68,11 @@ public class EmployeeController {
         var employeeForm = employeeRepository.findById(id)
             .map(employeeMapper::toEmployeeForm)
             .orElseThrow(EmployeeNotFoundException::new);
+        var positions = positionRepository.findAll();
         var model = Map.of(
             "pageTitle", "Edição de Funcionário",
-            "employeeForm", employeeForm
+            "employeeForm", employeeForm,
+            "positions", positions
         );
         return new ModelAndView("employees/form", model);
     }

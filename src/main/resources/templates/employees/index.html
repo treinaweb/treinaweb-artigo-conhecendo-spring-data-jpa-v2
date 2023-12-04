@@ -27,7 +27,7 @@
                   <th scope="col">Nome</th>
                   <th scope="col">E-mail</th>
                   <th scope="col">Telefone</th>
-                  <!-- <th scope="col">Cargo</th> -->
+                  <th scope="col">Cargo</th>
                   <th scope="col">Ações</th>
                 </tr>
               </thead>
@@ -37,7 +37,7 @@
                   <td th:text="${employee.name}">Cleyson Lima</td>
                   <td th:text="${employee.email}">cleyson@mail.com</td>
                   <td th:text="${employee.phone}">(11) 99999-9999</td>
-                  <!-- <td th:text="${employee.position}">Desenvolvedor</td> -->
+                  <td th:text="${employee.position}">Desenvolvedor</td>
                   <td>
                     <a 
                       th:href="@{/employees/{id} (id=${employee.id})}"

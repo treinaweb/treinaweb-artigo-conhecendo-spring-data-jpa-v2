@@ -18,5 +18,7 @@ public class EmployeeListItem {
     private String email;
 
     private String phone;
+
+    private String position;
     
 }
