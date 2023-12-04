@@ -1,6 +1,7 @@
 package br.com.treinaweb.twprojects.core.models;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -59,5 +61,8 @@ public class Employee {
 
     @ManyToOne(optional = false)
     private Position position;
+
+    @ManyToMany(mappedBy = "team")
+    private List<Project> projects;
     
 }

@@ -1,6 +1,7 @@
 package br.com.treinaweb.twprojects.web.employees.dtos;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,5 +31,7 @@ public class EmployeeDetails {
     private String address;
 
     private String position;
+
+    private List<EmployeeProjectListItem> projects;
     
 }

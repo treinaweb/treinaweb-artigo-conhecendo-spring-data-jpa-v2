@@ -17,6 +17,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
 
     private final AddressMapper addressMapper;
     private final PositionRepository positionRepository;
+    private final EmployeeProjectMapper employeeProjectMapper;
 
     @Override
     public Employee toEmployee(EmployeeForm employeeForm) {
@@ -64,6 +65,11 @@ public class EmployeeMapperImpl implements EmployeeMapper {
 
     @Override
     public EmployeeDetails toEmployeeDetails(Employee employee) {
+        var projects = employee.getProjects()
+            .stream()
+            .map(employeeProjectMapper::toEmployeeProjectListItem)
+            .toList();
+
         return EmployeeDetails.builder()
             .name(employee.getName())
             .email(employee.getEmail())
@@ -74,6 +80,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             .resignationDate(employee.getResignationDate())
             .address(addressMapper.formatAddress(employee.getAddress()))
             .position(employee.getPosition().getName())
+            .projects(projects)
             .build();
     }
     
